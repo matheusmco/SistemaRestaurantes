@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SistemaRestaurantes.Data.Dtos;
 using SistemaRestaurantes.Data.Models;
@@ -18,25 +19,59 @@ namespace SistemaRestaurantes.Controllers
         [HttpPost]
         public ActionResult<PratoDto> Post(PratoDto PratoDto)
         {
-            return new PratoDto();
+            var Prato = new PratoModel(PratoDto);
+
+            if (Prato.PratoId > 0)
+            {
+                _context.Pratos.Update(Prato);
+            }
+            else
+            {
+                _context.Pratos.Add(Prato);
+            }
+
+            _context.SaveChanges();
+
+            var PratoRetorno = _context.Pratos.Select(x => new PratoDto(x)).Where(x => x.PratoId == Prato.PratoId).First();
+
+            if (PratoRetorno == null)
+            {
+                return NotFound();
+            }
+
+            return PratoRetorno;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<PratoDto>> Get()
         {
-            return new List<PratoDto>();
+            var Pratos = _context.Pratos.Select(x => new PratoDto(x)).ToList();
+
+            if (Pratos == null)
+            {
+                return NotFound();
+            }
+            return Pratos;
         }
 
         [HttpGet("{id}")]
         public ActionResult<PratoDto> Get(int id)
         {
-            return new PratoDto();
+            var PratoRetorno = _context.Pratos.Select(x => new PratoDto(x)).Where(x => x.PratoId == id).First();
+
+            if (PratoRetorno == null)
+            {
+                return NotFound();
+            }
+
+            return PratoRetorno;
         }
 
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-
+            _context.Pratos.Remove(_context.Pratos.Where(x => x.PratoId == id).First());
+            _context.SaveChanges();
         }
     }
 }

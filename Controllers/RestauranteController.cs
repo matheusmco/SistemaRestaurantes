@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SistemaRestaurantes.Data.Dtos;
 using SistemaRestaurantes.Data.Models;
@@ -22,24 +20,57 @@ namespace SistemaRestaurantes.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<RestauranteDto>> Get()
         {
-            return new List<RestauranteDto>();
+            var Restaurantes = _context.Restaurantes.Select(x => new RestauranteDto(x)).ToList();
+
+            if (Restaurantes == null)
+            {
+                return NotFound();
+            }
+            return Restaurantes;
         }
 
         [HttpGet("{id}")]
         public ActionResult<RestauranteDto> Get(int id)
         {
-            return new RestauranteDto();
+            var Restaurante = _context.Restaurantes.Select(x => new RestauranteDto(x)).Where(x => x.RestauranteId == id).First();
+
+            if (Restaurante == null)
+            {
+                return NotFound();
+            }
+            return Restaurante;
         }
 
         [HttpPost]
-        public ActionResult<RestauranteDto> Post([FromBody] RestauranteDto Restaurante)
+        public ActionResult<RestauranteDto> Post([FromBody] RestauranteDto RestauranteDto)
         {
-            return new RestauranteDto();
+            var Restaurante = new RestauranteModel(RestauranteDto);
+
+            if (Restaurante.RestauranteId > 0)
+            {
+                _context.Restaurantes.Update(Restaurante);
+            }
+            else
+            {
+                _context.Restaurantes.Add(Restaurante);
+            }
+
+            _context.SaveChanges();
+
+            var RestauranteRetorno = _context.Restaurantes.Select(x => new RestauranteDto(x)).Where(x => x.RestauranteId == Restaurante.RestauranteId).First();
+
+            if (RestauranteRetorno == null)
+            {
+                return NotFound();
+            }
+            return RestauranteRetorno;
         }
 
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            _context.Restaurantes.Remove(_context.Restaurantes.Where(x => x.RestauranteId == id).First());
+            _context.SaveChanges();
         }
     }
 }
