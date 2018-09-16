@@ -3,40 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SistemaRestaurantes.Data.Dtos;
+using SistemaRestaurantes.Data.Models;
 
 namespace SistemaRestaurantes.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class RestauranteController : ControllerBase
     {
-        // GET api/values
+        private Context _context;
+
+        public RestauranteController(Context context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<RestauranteDto>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new List<RestauranteDto>();
         }
 
-        // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<RestauranteDto> Get(int id)
         {
-            return "value";
+            return new RestauranteDto();
         }
 
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<RestauranteDto> Post([FromBody] RestauranteDto Restaurante)
         {
+            return new RestauranteDto();
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
