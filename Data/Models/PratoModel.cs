@@ -8,6 +8,7 @@ namespace SistemaRestaurantes.Data.Models
         public int PratoId { get; set; }
         public string Nome { get; set; }
         public double Preco { get; set; }
+        public int RestauranteId { get; set; }
         public RestauranteModel Restaurante { get; set; }
 
         public PratoModel() { }
@@ -17,7 +18,7 @@ namespace SistemaRestaurantes.Data.Models
             this.PratoId = Prato.PratoId;
             this.Nome = Prato.Nome;
             this.Preco = Prato.Preco;
-            this.Restaurante = new RestauranteModel(Prato.Restaurante);
+            this.RestauranteId = Prato.Restaurante.RestauranteId;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace SistemaRestaurantes.Controllers
 
             _context.SaveChanges();
 
-            var PratoRetorno = _context.Pratos.Select(x => new PratoDto(x)).Where(x => x.PratoId == Prato.PratoId).First();
+            var PratoRetorno = _context.Pratos.Select(x => new PratoDto(x, _context.Restaurantes.Where(r => r.RestauranteId == x.RestauranteId).FirstOrDefault())).Where(x => x.PratoId == Prato.PratoId).First();
 
             if (PratoRetorno == null)
             {
@@ -45,9 +45,9 @@ namespace SistemaRestaurantes.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<PratoDto>> Get()
         {
-            var Pratos = _context.Pratos.Select(x => new PratoDto(x)).ToList();
+            var Pratos = _context.Pratos.Select(x => new PratoDto(x, _context.Restaurantes.Where(r => r.RestauranteId == x.RestauranteId).FirstOrDefault())).ToList();
 
-            if (Pratos == null)
+            if (Pratos.Count == 0)
             {
                 return NotFound();
             }
@@ -57,7 +57,7 @@ namespace SistemaRestaurantes.Controllers
         [HttpGet("{id}")]
         public ActionResult<PratoDto> Get(int id)
         {
-            var PratoRetorno = _context.Pratos.Select(x => new PratoDto(x)).Where(x => x.PratoId == id).First();
+            var PratoRetorno = _context.Pratos.Select(x => new PratoDto(x, _context.Restaurantes.Where(r => r.RestauranteId == x.RestauranteId).FirstOrDefault())).Where(x => x.PratoId == id).FirstOrDefault();
 
             if (PratoRetorno == null)
             {
@@ -70,7 +70,7 @@ namespace SistemaRestaurantes.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            _context.Pratos.Remove(_context.Pratos.Where(x => x.PratoId == id).First());
+            _context.Pratos.Remove(_context.Pratos.Where(x => x.PratoId == id).FirstOrDefault());
             _context.SaveChanges();
         }
     }

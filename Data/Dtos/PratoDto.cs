@@ -11,12 +11,12 @@ namespace SistemaRestaurantes.Data.Dtos
 
         public PratoDto() { }
 
-        public PratoDto(PratoModel Prato)
+        public PratoDto(PratoModel Prato, RestauranteModel Restaurante)
         {
             this.PratoId = Prato.PratoId;
             this.Nome = Prato.Nome;
             this.Preco = Prato.Preco;
-            this.Restaurante = new RestauranteDto(Prato.Restaurante);
+            this.Restaurante = new RestauranteDto(Restaurante);
         }
     }
 }

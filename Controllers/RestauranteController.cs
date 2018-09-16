@@ -22,7 +22,7 @@ namespace SistemaRestaurantes.Controllers
         {
             var Restaurantes = _context.Restaurantes.Select(x => new RestauranteDto(x)).ToList();
 
-            if (Restaurantes == null)
+            if (Restaurantes.Count == 0)
             {
                 return NotFound();
             }
@@ -32,7 +32,7 @@ namespace SistemaRestaurantes.Controllers
         [HttpGet("{id}")]
         public ActionResult<RestauranteDto> Get(int id)
         {
-            var Restaurante = _context.Restaurantes.Select(x => new RestauranteDto(x)).Where(x => x.RestauranteId == id).First();
+            var Restaurante = _context.Restaurantes.Select(x => new RestauranteDto(x)).Where(x => x.RestauranteId == id).FirstOrDefault();
 
             if (Restaurante == null)
             {
@@ -69,7 +69,7 @@ namespace SistemaRestaurantes.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            _context.Restaurantes.Remove(_context.Restaurantes.Where(x => x.RestauranteId == id).First());
+            _context.Restaurantes.Remove(_context.Restaurantes.Where(x => x.RestauranteId == id).FirstOrDefault());
             _context.SaveChanges();
         }
     }
